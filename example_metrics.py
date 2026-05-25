@@ -1,7 +1,7 @@
 from argparse import ArgumentParser, Namespace
 import torch
 from torch.utils.data import DataLoader
-from torchmetrics.image import psnr,ssim,lpip
+from torchmetrics.image import psnr,ssim
 import sys
 import os
 import matplotlib.pyplot as plt
@@ -92,7 +92,12 @@ if __name__ == "__main__":
     #metrics
     ssim_metrics=ssim.StructuralSimilarityIndexMeasure(data_range=(0.0,1.0)).cuda()
     psnr_metrics=psnr.PeakSignalNoiseRatio(data_range=(0.0,1.0)).cuda()
-    lpip_metrics=lpip.LearnedPerceptualImagePatchSimilarity(net_type='vgg').cuda()
+    lpip_metrics=None
+    try:
+        from torchmetrics.image import lpip
+        lpip_metrics=lpip.LearnedPerceptualImagePatchSimilarity(net_type='vgg').cuda()
+    except Exception as exc:
+        print(f"[WARN] LPIPS is disabled: {exc}")
 
     #iter
     if lp.eval:
@@ -141,16 +146,20 @@ if __name__ == "__main__":
                 psnr_value=psnr_metrics(img,gt_image)
                 ssim_list.append(ssim_metrics(img,gt_image).unsqueeze(0))
                 psnr_list.append(psnr_value.unsqueeze(0))
-                lpips_list.append(lpip_metrics(img,gt_image).unsqueeze(0))
+                if lpip_metrics is not None:
+                    lpips_list.append(lpip_metrics(img,gt_image).unsqueeze(0))
                 if loader_name=="Testset" and args.save_image:
                     plt.imsave(os.path.join(lp.model_path,loader_name,"{}-{:.2f}-rd.png".format(index,float(psnr_value))),img.detach().cpu()[0].permute(1,2,0).numpy())
                     plt.imsave(os.path.join(lp.model_path,loader_name,"{}-{:.2f}-gt.png".format(index,float(psnr_value))),gt_image.detach().cpu()[0].permute(1,2,0).numpy())
             ssim_mean=torch.concat(ssim_list,dim=0).mean()
             psnr_mean=torch.concat(psnr_list,dim=0).mean()
-            lpips_mean=torch.concat(lpips_list,dim=0).mean()
+            lpips_mean=torch.concat(lpips_list,dim=0).mean() if len(lpips_list)>0 else None
 
             print("  Scene:{0}".format(lp.model_path+" "+loader_name))
             print("  SSIM : {:>12.7f}".format(float(ssim_mean)))
             print("  PSNR : {:>12.7f}".format(float(psnr_mean)))
-            print("  LPIPS: {:>12.7f}".format(float(lpips_mean)))
+            if lpips_mean is None:
+                print("  LPIPS:          N/A")
+            else:
+                print("  LPIPS: {:>12.7f}".format(float(lpips_mean)))
             print("")

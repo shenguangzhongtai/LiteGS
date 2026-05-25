@@ -1,0 +1,5 @@
+scene,dataset_type,run_name,method,split,train_time_seconds,primitives,ssim,psnr,lpips,delta_ssim_vs_baseline,delta_psnr_vs_baseline,delta_lpips_vs_baseline,primitive_reduction_vs_baseline,notes
+lego,synthetic,lego_100ep,baseline,test,140.5,100096,0.8352349,21.5609226,0.1718963,,,,,baseline reproduction
+lego,synthetic,lego_100ep_adaptive,adaptive_density_control,test,81.23928642272949,396160,0.8527095,19.6876259,0.1711703,0.0174746,-1.8732967,-0.0007260,-2.958,"faster training; higher SSIM and slightly lower LPIPS; lower PSNR; more primitives"
+truck,real,truck_100ep,baseline,test,,988928,0.9465371,28.1873131,0.0340067,,,,,baseline reproduction
+truck,real,truck_100ep_adaptive,adaptive_density_control,test,207.56289672851562,544256,0.9457754,28.1549969,0.0356959,-0.0007617,-0.0323162,0.0016892,0.449651,"45 percent fewer primitives with near-baseline quality"

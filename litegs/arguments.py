@@ -88,6 +88,8 @@ class OptimizationParams(ParamGroup):
     rotation_lr = 0.001
     lambda_dssim = 0.2
     reg_weight = 0.0
+    sh_warmup = False
+    sh_warmup_interval = 10
     learnable_viewproj = False
     def __init__(self, parser):
         super().__init__(parser, "Optimization Parameters")
@@ -100,6 +102,11 @@ class DensifyParams(ParamGroup):
     opacity_reset_mode='decay'#'decay','reset'
     prune_mode='weight'#'weight','threshold'
     target_primitives=1000000
+    adaptive_density=False
+    adaptive_density_growth=4.0
+    adaptive_density_min_primitives=100000
+    adaptive_density_late_start=0.6
+    adaptive_density_late_interval_scale=2
     
 
 

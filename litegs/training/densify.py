@@ -240,13 +240,16 @@ class DensityControllerOfficial(DensityControllerBase):
     def is_densify_actived(self,epoch:int):
 
         return epoch<self.densify_params.densify_until and epoch>=self.densify_params.densify_from and (
-            epoch%self.densify_params.densification_interval==0)
+            epoch%self.get_densification_interval(epoch)==0)
+
+    def get_densification_interval(self,epoch:int)->int:
+        return max(1,self.densify_params.densification_interval)
 
     @torch.no_grad()
     def step(self,optimizer:torch.optim.Optimizer,epoch:int):
         if epoch<self.densify_params.densify_until and epoch>=self.densify_params.densify_from:
             bUpdate=False
-            if epoch%self.densify_params.densification_interval==0:
+            if epoch%self.get_densification_interval(epoch)==0:
                 self.split_and_clone(optimizer,epoch)
                 self.prune(optimizer,epoch)
                 bUpdate=True
@@ -266,8 +269,26 @@ class DensityControllerTamingGS(DensityControllerOfficial):
 
         assert(densify_params.target_primitives!=0.0)
         self.target_points_num=densify_params.target_primitives
+        if densify_params.adaptive_density:
+            adaptive_target=max(
+                int(init_points_num*densify_params.adaptive_density_growth),
+                int(densify_params.adaptive_density_min_primitives)
+            )
+            self.target_points_num=min(int(densify_params.target_primitives),adaptive_target)
+            print("[AdaptiveDensity] init_primitives={} target_primitives={} default_target={}".format(
+                init_points_num,self.target_points_num,densify_params.target_primitives))
         super(DensityControllerTamingGS,self).__init__(screen_extent,densify_params,bCluster,init_points_num)
         return
+
+    def get_densification_interval(self,epoch:int)->int:
+        interval=super(DensityControllerTamingGS,self).get_densification_interval(epoch)
+        if not self.densify_params.adaptive_density:
+            return interval
+        schedule_length=max(1,self.densify_params.densify_until-self.densify_params.densify_from)
+        progress=(epoch-self.densify_params.densify_from)/schedule_length
+        if progress>=self.densify_params.adaptive_density_late_start:
+            interval*=max(1,self.densify_params.adaptive_density_late_interval_scale)
+        return interval
     
     @torch.no_grad()
     def get_prune_mask(self,actived_opacity:torch.Tensor,actived_scale:torch.Tensor)->torch.Tensor:
@@ -302,9 +323,20 @@ class DensityControllerTamingGS(DensityControllerOfficial):
         prune_num=self.get_prune_mask(opacity.sigmoid(),scale.exp()).sum()
 
         cur_target_count = (self.target_points_num - self.init_points_num) / (self.densify_params.densify_until - self.densify_params.densify_from) * (epoch-self.densify_params.densify_from)+self.init_points_num
-        budget=min(max(int(cur_target_count-xyz.shape[-1]),1)+prune_num,xyz.shape[-1])
+        new_budget=int(cur_target_count-xyz.shape[-1])
+        if self.densify_params.adaptive_density:
+            new_budget=max(new_budget,0)
+        else:
+            new_budget=max(new_budget,1)
+        budget=min(new_budget+int(prune_num.item()),xyz.shape[-1])
+        if budget<=0:
+            return
 
         score=self.get_score(xyz,scale,rot,sh_0,sh_rest,opacity)
+        valid_score_count=int((score>0).sum().item())
+        if valid_score_count<=0:
+            return
+        budget=min(budget,valid_score_count)
         densify_index = torch.multinomial(score, budget, replacement=False)
         clone_index=densify_index[(scale[:,densify_index].exp().max(dim=0).values <= self.percent_dense*self.screen_extent)]
         split_index=densify_index[(scale[:,densify_index].exp().max(dim=0).values > self.percent_dense*self.screen_extent)]

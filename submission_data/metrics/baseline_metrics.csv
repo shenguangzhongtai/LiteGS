@@ -1,0 +1,7 @@
+scene,dataset_type,run_name,split,epochs,iterations,resolution,ssim,psnr,lpips,train_time_seconds,output_dir,notes
+lego,synthetic,lego_50ep,train,50,5000,default,0.9113454,27.9922752,0.1149511,15.284282922744751,output/lego_50ep,lightweight baseline
+lego,synthetic,lego_50ep,test,50,5000,default,0.7635117,19.4026279,0.2526915,15.284282922744751,output/lego_50ep,lightweight baseline
+lego,synthetic,lego_100ep,train,100,10000,default,0.9738271,34.5775032,0.0344985,140.5,output/lego_100ep,better lightweight baseline
+lego,synthetic,lego_100ep,test,100,10000,default,0.8352349,21.5609226,0.1718963,140.5,output/lego_100ep,better lightweight baseline
+truck,real,truck_100ep,train,100,22000,4,0.9704869,31.2180710,0.0221245,,output/truck_100ep,real-scene lightweight baseline
+truck,real,truck_100ep,test,100,22000,4,0.9465371,28.1873131,0.0340067,,output/truck_100ep,real-scene lightweight baseline

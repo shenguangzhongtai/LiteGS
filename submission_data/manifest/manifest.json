@@ -1,0 +1,73 @@
+{
+  "description": "Experiment data package for the LiteGS course report.",
+  "render_results": {
+    "lego": {
+      "ground_truth": "submission_data/render_results/lego_124_ground_truth.png",
+      "baseline_render": "submission_data/render_results/lego_124_baseline_render.png",
+      "adaptive_render": "submission_data/render_results/lego_124_adaptive_render.png",
+      "adaptive_ground_truth": "submission_data/render_results/lego_124_adaptive_ground_truth.png"
+    },
+    "truck": {
+      "ground_truth": "submission_data/render_results/truck_9_ground_truth.png",
+      "baseline_render": "submission_data/render_results/truck_9_baseline_render.png",
+      "adaptive_render": "submission_data/render_results/truck_9_adaptive_render.png",
+      "adaptive_ground_truth": "submission_data/render_results/truck_9_adaptive_ground_truth.png"
+    }
+  },
+  "main_report_figure": "report/figures/render_comparison.png",
+  "metrics_json": "submission_data/metrics/metrics_summary.json",
+  "files": [
+    {
+      "path": "submission_data/render_results/lego_124_adaptive_ground_truth.png",
+      "bytes": 519011
+    },
+    {
+      "path": "submission_data/render_results/lego_124_adaptive_render.png",
+      "bytes": 472943
+    },
+    {
+      "path": "submission_data/render_results/lego_124_baseline_render.png",
+      "bytes": 41355
+    },
+    {
+      "path": "submission_data/render_results/lego_124_ground_truth.png",
+      "bytes": 42770
+    },
+    {
+      "path": "submission_data/render_results/render_comparison.png",
+      "bytes": 340448
+    },
+    {
+      "path": "submission_data/render_results/truck_9_adaptive_ground_truth.png",
+      "bytes": 71401
+    },
+    {
+      "path": "submission_data/render_results/truck_9_adaptive_render.png",
+      "bytes": 67381
+    },
+    {
+      "path": "submission_data/render_results/truck_9_baseline_render.png",
+      "bytes": 68092
+    },
+    {
+      "path": "submission_data/render_results/truck_9_ground_truth.png",
+      "bytes": 71401
+    },
+    {
+      "path": "submission_data/metrics/adaptive_density_summary.csv",
+      "bytes": 869
+    },
+    {
+      "path": "submission_data/metrics/baseline_metrics.csv",
+      "bytes": 896
+    },
+    {
+      "path": "submission_data/metrics/improvement_metrics.csv",
+      "bytes": 4204
+    },
+    {
+      "path": "submission_data/metrics/metrics_summary.json",
+      "bytes": 15231
+    }
+  ]
+}

@@ -105,7 +105,8 @@ def start(lp:arguments.ModelParams,op:arguments.OptimizationParams,pp:arguments.
                 xyz,scale,rot,sh_0,sh_rest,opacity=scene.spatial_refine(pp.cluster_size>0,opt,xyz)
                 cluster_origin,cluster_extend=scene.cluster.get_cluster_AABB(xyz,scale.exp(),torch.nn.functional.normalize(rot,dim=0))
             if actived_sh_degree<lp.sh_degree:
-                actived_sh_degree=min(int(epoch/5),lp.sh_degree)
+                sh_interval=op.sh_warmup_interval if op.sh_warmup else 5
+                actived_sh_degree=min(int(epoch/max(sh_interval,1)),lp.sh_degree)
         torch.cuda.synchronize()
         with StatisticsHelperInst.try_start(epoch):
             for view_matrix,proj_matrix,frustumplane,gt_image,idx_tensor in train_loader:
