@@ -10,6 +10,23 @@ For submission, use this `LiteGS/` directory as the code repository root. The ou
 
 If submitting through GitHub, fork the original LiteGS repository first, push this `improvement` branch to your fork, and submit the fork URL plus branch name. The current local `origin` still points to the original repository unless you replace it with your own fork URL.
 
+## Upstream Code and Attribution
+
+This submission is a fork/derivative of the original LiteGS repository by Moore Threads:
+
+```text
+https://github.com/MooreThreads/LiteGS
+```
+
+The upstream LiteGS repository itself includes code derived from the original 3D Gaussian Splatting implementation and is distributed under the Gaussian-Splatting License. The repository `LICENSE.md` also notes an MIT-licensed component based on Evan Su's `pytorch-ssim` project:
+
+```text
+https://github.com/graphdeco-inria/gaussian-splatting
+https://github.com/Po-Hsun-Su/pytorch-ssim
+```
+
+No additional third-party code snippets were copied for the adaptive density-control improvement. The new project-specific changes are the command-line options, density-control scheduling logic, experiment scripts, logs, and report/data packaging files listed below.
+
 ## Improvement Summary
 
 The final claimed code-level improvement is adaptive density control.
