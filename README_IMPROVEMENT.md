@@ -6,7 +6,7 @@ This repository is based on the original LiteGS codebase:
 - Current working branch: `improvement`
 - Main improvement: adaptive density control for scene-aware primitive budgeting
 
-For submission, use this `LiteGS/` directory as the code repository root. The outer `2d-gaussian-splatting/` directory is only a local workspace wrapper and is not the project repository root.
+For submission, use this `LiteGS/` directory as the code repository root. The outer `3d-gaussian-splatting/` directory is only a local workspace wrapper and is not the project repository root.
 
 If submitting through GitHub, fork the original LiteGS repository first, push this `improvement` branch to your fork, and submit the fork URL plus branch name. The current local `origin` still points to the original repository unless you replace it with your own fork URL.
 
@@ -116,7 +116,7 @@ Large datasets and output folders may be excluded from a Git submission if the c
 Run from the repository root:
 
 ```powershell
-cd E:\PySlam\2d-gaussian-splatting\LiteGS; conda activate litegs
+cd E:\PySlam\3d-gaussian-splatting\LiteGS; conda activate litegs
 ```
 
 Original baseline training commands:
